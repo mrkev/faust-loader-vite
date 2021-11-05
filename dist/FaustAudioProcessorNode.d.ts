@@ -28,15 +28,15 @@ export declare class FaustAudioProcessorNode extends AudioWorkletNode {
      * @param path - a path to the control
      * @param val - the value to be set
      */
-    setParamValue(path: any, val: any): void;
-    setParam(path: any, val: any): void;
+    setParamValue: (path: any, val: any) => void;
+    setParam: (path: any, val: any) => void;
     /**
      *  Get the control value at a given path.
      *
      * @return the current control value
      */
-    getParamValue(path: string): any;
-    getParam(path: string): any;
+    getParamValue: (path: string) => any;
+    getParam: (path: string) => any;
     /**
      * Setup a control output handler with a function of type (path, value)
      * to be used on each generated output value. This handler will be called

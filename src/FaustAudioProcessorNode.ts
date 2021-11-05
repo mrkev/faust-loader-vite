@@ -163,30 +163,30 @@ export class FaustAudioProcessorNode extends AudioWorkletNode {
    * @param path - a path to the control
    * @param val - the value to be set
    */
-  setParamValue(path: any, val: any) {
+  setParamValue = (path: any, val: any) => {
     // Needed for sample accurate control
     (this.parameters as any).get(path).setValueAtTime(val, 0);
-  }
+  };
 
   // For WAP
-  setParam(path: any, val: any) {
+  setParam = (path: any, val: any) => {
     // Needed for sample accurate control
     (this.parameters as any).get(path).setValueAtTime(val, 0);
-  }
+  };
 
   /**
    *  Get the control value at a given path.
    *
    * @return the current control value
    */
-  getParamValue(path: string) {
+  getParamValue = (path: string) => {
     return (this.parameters as any).get(path).value;
-  }
+  };
 
   // For WAP
-  getParam(path: string) {
+  getParam = (path: string) => {
     return (this.parameters as any).get(path).value;
-  }
+  };
 
   /**
    * Setup a control output handler with a function of type (path, value)

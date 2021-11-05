@@ -22,6 +22,33 @@ class FaustAudioProcessorNode extends AudioWorkletNode {
         // MIDI
         this.fPitchwheelLabel = [];
         this.fCtrlLabel = new Array(128);
+        /**
+         *  Set the control value at a given path.
+         *
+         * @param path - a path to the control
+         * @param val - the value to be set
+         */
+        this.setParamValue = (path, val) => {
+            // Needed for sample accurate control
+            this.parameters.get(path).setValueAtTime(val, 0);
+        };
+        // For WAP
+        this.setParam = (path, val) => {
+            // Needed for sample accurate control
+            this.parameters.get(path).setValueAtTime(val, 0);
+        };
+        /**
+         *  Get the control value at a given path.
+         *
+         * @return the current control value
+         */
+        this.getParamValue = (path) => {
+            return this.parameters.get(path).value;
+        };
+        // For WAP
+        this.getParam = (path) => {
+            return this.parameters.get(path).value;
+        };
         this.json = nodeOptions.processorOptions.json;
         this.json_object = JSON.parse(this.json);
         for (var i = 0; i < this.fCtrlLabel.length; i++) {
@@ -147,33 +174,6 @@ class FaustAudioProcessorNode extends AudioWorkletNode {
                 });
             });
         });
-    }
-    /**
-     *  Set the control value at a given path.
-     *
-     * @param path - a path to the control
-     * @param val - the value to be set
-     */
-    setParamValue(path, val) {
-        // Needed for sample accurate control
-        this.parameters.get(path).setValueAtTime(val, 0);
-    }
-    // For WAP
-    setParam(path, val) {
-        // Needed for sample accurate control
-        this.parameters.get(path).setValueAtTime(val, 0);
-    }
-    /**
-     *  Get the control value at a given path.
-     *
-     * @return the current control value
-     */
-    getParamValue(path) {
-        return this.parameters.get(path).value;
-    }
-    // For WAP
-    getParam(path) {
-        return this.parameters.get(path).value;
     }
     /**
      * Setup a control output handler with a function of type (path, value)
