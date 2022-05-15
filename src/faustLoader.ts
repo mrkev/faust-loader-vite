@@ -30,7 +30,7 @@ export type ProcessorLoader = (
 const faustLoader: LoaderDefinitionFunction<Options> = async function (
   content
 ) {
-  const options: Options = getOptions(this);
+  const options: Options = this.getOptions();
   const { outputPath = "", publicPath = "/" } = options;
   const context = this.rootContext;
   const workDir = await tmp.dir();
