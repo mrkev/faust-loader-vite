@@ -21,7 +21,7 @@ const fs_extra_1 = __importDefault(require("fs-extra"));
 const tmp_promise_1 = __importDefault(require("tmp-promise"));
 const faustLoader = function (content) {
     return __awaiter(this, void 0, void 0, function* () {
-        const options = loader_utils_1.getOptions(this);
+        const options = this.getOptions();
         const { outputPath = "", publicPath = "/" } = options;
         const context = this.rootContext;
         const workDir = yield tmp_promise_1.default.dir();
@@ -35,7 +35,7 @@ const faustLoader = function (content) {
             });
         });
         yield fs_extra_1.default.copy(faust2wasmPath, workDir.path);
-        const dspName = loader_utils_1.interpolateName(this, "[name]", { content, context });
+        const dspName = (0, loader_utils_1.interpolateName)(this, "[name]", { content, context });
         const dspPath = path_1.default.resolve(workDir.path, dspName);
         yield fs_extra_1.default.writeFile(dspPath, content);
         const { stderr } = yield exec(`./faust2wasm -worklet ${dspPath}`, {
@@ -43,13 +43,13 @@ const faustLoader = function (content) {
         });
         if (stderr)
             this.emitError(new Error(stderr));
-        const wasmName = loader_utils_1.interpolateName(this, "[name].wasm", { context, content });
+        const wasmName = (0, loader_utils_1.interpolateName)(this, "[name].wasm", { context, content });
         const wasmPath = path_1.default.resolve(workDir.path, wasmName);
         const wasmContent = yield fs_extra_1.default.readFile(wasmPath);
         // TODO: this method should accept a buffer
         // PR: https://github.com/webpack/webpack/pull/13577
         this.emitFile(path_1.default.join(outputPath, wasmName), wasmContent);
-        const processorName = loader_utils_1.interpolateName(this, "[name]-processor.js", {
+        const processorName = (0, loader_utils_1.interpolateName)(this, "[name]-processor.js", {
             context,
             content,
         });
@@ -69,7 +69,8 @@ const faustLoader = function (content) {
             });
         });
         return `
-  import loadProcessor from "${importPath}";
+  // import loadProcessor from "${importPath}";
+  import loadProcessor from "faust-loader/dist/loadProcessor";
 
   function create${dspName}Node(context) {
     return loadProcessor(context, "${dspName}", "${publicPath}")

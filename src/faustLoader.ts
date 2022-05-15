@@ -88,7 +88,8 @@ const faustLoader: LoaderDefinitionFunction<Options> = async function (
   });
 
   return `
-  import loadProcessor from "${importPath}";
+  // import loadProcessor from "${importPath}";
+  import loadProcessor from "faust-loader/dist/loadProcessor";
 
   function create${dspName}Node(context) {
     return loadProcessor(context, "${dspName}", "${publicPath}")
