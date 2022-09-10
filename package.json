@@ -4,7 +4,7 @@
   "main": "dist/faustLoader.js",
   "types": "dist/faustLoader.d.ts",
   "scripts": {
-    "prepare": "install-peers && tsc",
+    "prepare": "install-peers && tsc --project tsconfig.build.json",
     "build": "tsc --project tsconfig.build.json",
     "serve": "webpack serve -c test/webpack.config.js",
     "test": "webpack build -c test/webpack.config.js",
