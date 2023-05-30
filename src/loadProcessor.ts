@@ -105,13 +105,21 @@ const importObject = {
 export default async function loadProcessor(
   context: BaseAudioContext,
   name: string,
-  baseURL: string
+  baseURL: string,
+  wasmFile: string,
+  processorFile: string
 ) {
   const cleanedBaseURL = baseURL.endsWith("/") ? baseURL : `${baseURL}/`;
+  const cleanedWasmFile = wasmFile.startsWith("/")
+    ? wasmFile.substring(1)
+    : wasmFile;
+  const cleanedProcessorFile = processorFile.startsWith("/")
+    ? processorFile.substring(1)
+    : processorFile;
 
   const [dspModule] = await Promise.all([
-    getWasmModule(`${cleanedBaseURL}${name}.wasm`),
-    loadProcessorModule(context, `${cleanedBaseURL}${name}-processor.js`),
+    getWasmModule(`${cleanedBaseURL}${cleanedWasmFile}`),
+    loadProcessorModule(context, `${cleanedBaseURL}${cleanedProcessorFile}`),
   ]);
 
   const dspInstance = await WebAssembly.instantiate(dspModule, importObject);

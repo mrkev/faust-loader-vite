@@ -35,7 +35,7 @@ const faustLoader = function (content) {
             });
         });
         yield fs_extra_1.default.copy(faust2wasmPath, workDir.path);
-        const dspName = (0, loader_utils_1.interpolateName)(this, "[name]", { content, context });
+        const dspName = loader_utils_1.interpolateName(this, "[name]", { content, context });
         const dspPath = path_1.default.resolve(workDir.path, dspName);
         yield fs_extra_1.default.writeFile(dspPath, content);
         const { stderr } = yield exec(`./faust2wasm -worklet ${dspPath}`, {
@@ -43,13 +43,13 @@ const faustLoader = function (content) {
         });
         if (stderr)
             this.emitError(new Error(stderr));
-        const wasmName = (0, loader_utils_1.interpolateName)(this, "[name].wasm", { context, content });
+        const wasmName = loader_utils_1.interpolateName(this, "[name].wasm", { context, content });
         const wasmPath = path_1.default.resolve(workDir.path, wasmName);
         const wasmContent = yield fs_extra_1.default.readFile(wasmPath);
         // TODO: this method should accept a buffer
         // PR: https://github.com/webpack/webpack/pull/13577
         this.emitFile(path_1.default.join(outputPath, wasmName), wasmContent);
-        const processorName = (0, loader_utils_1.interpolateName)(this, "[name]-processor.js", {
+        const processorName = loader_utils_1.interpolateName(this, "[name]-processor.js", {
             context,
             content,
         });

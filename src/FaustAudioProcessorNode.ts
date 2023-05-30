@@ -260,6 +260,7 @@ export class FaustAudioProcessorNode extends AudioWorkletNode {
    * @param value - the MIDI controller value (0..127)
    */
   ctrlChange(channel: any, ctrl: any, value: any) {
+    //@ts-ignore TODO FIX THIS!
     if (this.fCtrlLabel[ctrl] !== []) {
       for (var i = 0; i < this.fCtrlLabel[ctrl].length; i++) {
         var path = this.fCtrlLabel[ctrl][i].path;

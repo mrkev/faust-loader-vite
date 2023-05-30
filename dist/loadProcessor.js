@@ -18,20 +18,17 @@ function heap2Str(buf) {
     }
     return str;
 }
-const processorModules = {};
 function loadProcessorModule(context, url) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("HERE");
+        console.log("loadProcessorModule");
         if (!context.audioWorklet) {
             console.error("Error loading FaustAudioProcessorNode: standardized-audio-context AudioWorklet isn't supported in this environment.");
             return null;
         }
-        const existing = processorModules[url];
-        if (existing) {
-            return existing;
-        }
-        processorModules[url] = context.audioWorklet.addModule(url);
-        return processorModules[url];
+        // The audio worklet handles caching of modules by URL in the same context.
+        // Adding an already-loaded module to a different context will trigger another
+        // network request, but the browser cache should catch it.
+        return context.audioWorklet.addModule(url);
     });
 }
 const wasmModules = {};
@@ -107,12 +104,18 @@ const importObject = {
         table: new WebAssembly.Table({ initial: 0, element: "anyfunc" }),
     },
 };
-function loadProcessor(context, name, baseURL) {
+function loadProcessor(context, name, baseURL, wasmFile, processorFile) {
     return __awaiter(this, void 0, void 0, function* () {
         const cleanedBaseURL = baseURL.endsWith("/") ? baseURL : `${baseURL}/`;
+        const cleanedWasmFile = wasmFile.startsWith("/")
+            ? wasmFile.substring(1)
+            : wasmFile;
+        const cleanedProcessorFile = processorFile.startsWith("/")
+            ? processorFile.substring(1)
+            : processorFile;
         const [dspModule] = yield Promise.all([
-            getWasmModule(`${cleanedBaseURL}${name}.wasm`),
-            loadProcessorModule(context, `${cleanedBaseURL}${name}-processor.js`),
+            getWasmModule(`${cleanedBaseURL}${cleanedWasmFile}`),
+            loadProcessorModule(context, `${cleanedBaseURL}${cleanedProcessorFile}`),
         ]);
         const dspInstance = yield WebAssembly.instantiate(dspModule, importObject);
         const HEAPU8 = new Uint8Array(dspInstance.exports.memory.buffer);
